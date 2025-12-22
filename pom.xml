@@ -3,11 +3,11 @@
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
-	<groupId>Dec2024POMSeries</groupId>
-	<artifactId>Dec2024POMSeries</artifactId>
+	<groupId>seleniumproject</groupId>
+	<artifactId>seleniumproject</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 
-	<name>Dec2024POMSeries</name>
+	<name>seleniumproject</name>
 	<!-- FIXME change it to the project's website -->
 	<url>http://www.example.com</url>
 
@@ -116,31 +116,39 @@
 
 
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-surefire-plugin</artifactId>
-				<version>2.20</version>
+    <groupId>org.apache.maven.plugins</groupId>
+    <artifactId>maven-surefire-plugin</artifactId>
+    <version>3.2.5</version>
 
-				<configuration>
-					<forkCount>3</forkCount>
-					<reuseForks>true</reuseForks>
-					<suiteXmlFiles>
-						 <!-- <suiteXmlFile>src/test/resources/testrunners/testng_regression.xml</suiteXmlFile> --> 
-						<suiteXmlFile>${suiteXmlFile}</suiteXmlFile>
-					</suiteXmlFiles>
-					<argLine>
-						-javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
-					</argLine>
-				</configuration>
-				
-         	    <dependencies>
-					<dependency>
-						<groupId>org.aspectj</groupId>
-						<artifactId>aspectjweaver</artifactId>
-						<version>${aspectj.version}</version>
-					</dependency>
-				</dependencies>
+    <configuration>
 
-			</plugin>
+        <!-- Run ALL TestNG tests -->
+        <suiteXmlFiles>
+            <suiteXmlFile>
+                src/test/resources/testrunners/testng_regression.xml
+            </suiteXmlFile>
+        </suiteXmlFiles>
+
+        <!-- Stable execution -->
+        <forkCount>1</forkCount>
+        <reuseForks>true</reuseForks>
+
+        <!-- AspectJ for Allure -->
+        <argLine>
+            -javaagent:"${settings.localRepository}/org/aspectj/aspectjweaver/${aspectj.version}/aspectjweaver-${aspectj.version}.jar"
+        </argLine>
+
+    </configuration>
+
+    <dependencies>
+        <dependency>
+            <groupId>org.aspectj</groupId>
+            <artifactId>aspectjweaver</artifactId>
+            <version>${aspectj.version}</version>
+        </dependency>
+    </dependencies>
+</plugin>
+
 
 		</plugins>
 
