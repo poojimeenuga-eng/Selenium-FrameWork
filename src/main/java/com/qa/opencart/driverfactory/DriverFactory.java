@@ -4,16 +4,20 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.Properties;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.openqa.selenium.Capabilities;
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
+import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
 
 import com.aventstack.chaintest.plugins.ChainTestListener;
@@ -46,14 +50,36 @@ public class DriverFactory {
 		 
 		 switch (browsername.toLowerCase().trim()) {
 			case "chrome":
-				tlDriver .set(new ChromeDriver(optionsManager.getChromeOptions()));
+				
+				if(Boolean.parseBoolean(prop.getProperty("remote"))) {
+					// run on selenium grid
+					initRemoteDriver("chrome");
+					
+				}else {
+					// run it on local:
+					tlDriver.set(new ChromeDriver(optionsManager.getChromeOptions()));
+				}
 				break;
+				
 			case "edge":
-				tlDriver .set(new EdgeDriver(optionsManager.getEdgeOptions()));
+				if (Boolean.parseBoolean(prop.getProperty("remote"))) {
+					// run on remote/selenium grid server/aws/machine
+					initRemoteDriver("edge");
+				} else {
+					// run it on local:
+					tlDriver.set(new EdgeDriver(optionsManager.getEdgeOptions()));
+				}
 				break;
 			case "firefox":
-				tlDriver .set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
+				if (Boolean.parseBoolean(prop.getProperty("remote"))) {
+					// run on remote/selenium grid server/aws/machine
+					initRemoteDriver("firefox");
+				} else {
+					// run it on local:
+					tlDriver.set(new FirefoxDriver(optionsManager.getFirefoxOptions()));
+				}
 				break;
+				
 			case "safari":
 				tlDriver .set( new SafariDriver());
 				break;
@@ -70,10 +96,58 @@ public class DriverFactory {
 			return  getDriver();
 		}
 	 
-	 
+	// run it on remote- grid
+		private void initRemoteDriver(String browsername) {
+
+			switch (browsername) {
+			case "chrome":
+				try {
+					tlDriver.set(
+							new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getChromeOptions()));
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				break;
+
+			case "firefox":
+				try {
+					tlDriver.set(
+							new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getFirefoxOptions()));
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				break;
+
+			case "edge":
+				try {
+					tlDriver.set(new RemoteWebDriver(new URL(prop.getProperty("huburl")), optionsManager.getEdgeOptions()));
+				} catch (MalformedURLException e) {
+					e.printStackTrace();
+				}
+				break;
+
+			default:
+				System.out.println("this browser is not supported on Selenium GRID server..." + browsername);
+				throw new BrowserException("===INVALID BROWSER===");
+			}
+
+		}
+
+		/**
+		 * getDriver: get the local thready copy of the driver
+		 */
+
+
+
 	 public static WebDriver getDriver() {
 		 return tlDriver.get();
 	 }
+	 
+	 /**
+		 * this is used to init the config properties
+		 * 
+		 * @return
+		 */
 	 
 	 // maven clean install -Denv = "stage"
 	 
