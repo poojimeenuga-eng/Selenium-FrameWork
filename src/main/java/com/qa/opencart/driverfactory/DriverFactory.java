@@ -39,16 +39,16 @@ public class DriverFactory {
 	 public WebDriver initDriver(Properties prop) {
 		 
 		log.info("properties:" +prop);
-		 String browsername =  prop.getProperty("browser");
-		 //System.out.println("browser name :" + browsername);
+		 String browserName =  prop.getProperty("browser");
+		 //System.out.println("browser name :" + browserName);
 		 
-		 log.info("browser name :" + browsername);
-		 ChainTestListener.log("browser name :" + browsername);
+		 log.info("browser name :" + browserName);
+		 ChainTestListener.log("browser name :" + browserName);
 		 optionsManager = new OptionsManager(prop);
 		 
 		 highlight= prop.getProperty("highlight");
 		 
-		 switch (browsername.toLowerCase().trim()) {
+		 switch (browserName.toLowerCase().trim()) {
 			case "chrome":
 				
 				if(Boolean.parseBoolean(prop.getProperty("remote"))) {
@@ -85,8 +85,8 @@ public class DriverFactory {
 				break;
 
 			default:
-				//System.out.println("plz pass the valid browser name..." + browsername);
-				log.error("plz pass the valid browser name..." + browsername);
+				//System.out.println("plz pass the valid browser name..." + browserName);
+				log.error("plz pass the valid browser name..." + browserName);
 				throw new BrowserException("===INVALID BROWSER===");
 			}
 
@@ -97,9 +97,9 @@ public class DriverFactory {
 		}
 	 
 	// run it on remote- grid
-		private void initRemoteDriver(String browsername) {
+		private void initRemoteDriver(String browserName) {
 
-			switch (browsername) {
+			switch (browserName) {
 			case "chrome":
 				try {
 					tlDriver.set(
@@ -127,7 +127,7 @@ public class DriverFactory {
 				break;
 
 			default:
-				System.out.println("this browser is not supported on Selenium GRID server..." + browsername);
+				System.out.println("this browser is not supported on Selenium GRID server..." + browserName);
 				throw new BrowserException("===INVALID BROWSER===");
 			}
 

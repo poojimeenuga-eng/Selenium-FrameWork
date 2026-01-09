@@ -40,16 +40,16 @@ public class BaseTest {
 	private static final Logger log = LogManager.getLogger(BaseTest.class);
 	
     @Description("init the driver and properties")
-    @Parameters({"browser"})
+    @Parameters({"browser" , "browserversion"})
     @BeforeTest
-    public void setup(String browsername) {
+    public void setup(String browserName , String browserversion) {
         df = new DriverFactory();
         prop = df.initProp();
         
         // if browserName is passedd from .xml
-        if(browsername!=null) {
-        	prop.setProperty("browser", browsername);
-        	
+        if(browserName!=null) {
+        	prop.setProperty("browser", browserName);
+        	prop.setProperty("browserversion", browserversion);
         }
         
         //ChainTestListener.log("properties used :" + prop);
