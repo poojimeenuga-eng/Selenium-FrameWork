@@ -42,8 +42,8 @@ public class DriverFactory {
 		 String browserName =  prop.getProperty("browser");
 		 //System.out.println("browser name :" + browserName);
 		 
-		 log.info("browser name :" + browserName);
-		 ChainTestListener.log("browser name :" + browserName);
+		 log.info("browser Name :" + browserName);
+		 ChainTestListener.log("browser Name :" + browserName);
 		 optionsManager = new OptionsManager(prop);
 		 
 		 highlight= prop.getProperty("highlight");

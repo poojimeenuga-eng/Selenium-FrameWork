@@ -12,6 +12,7 @@ import org.testng.annotations.AfterTest;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Listeners;
+import org.testng.annotations.Optional;
 import org.testng.annotations.Parameters;
 
 import com.aventstack.chaintest.plugins.ChainTestListener;
@@ -40,16 +41,21 @@ public class BaseTest {
 	private static final Logger log = LogManager.getLogger(BaseTest.class);
 	
     @Description("init the driver and properties")
-    @Parameters({"browser" , "browserversion"})
+    @Parameters({"browser" , "browserVersion"})
     @BeforeTest
-    public void setup(String browserName , String browserversion) {
+    public void setup(
+            @Optional("chrome") String browserName,
+            @Optional("latest") String browserVersion) {
+    	
+
         df = new DriverFactory();
         prop = df.initProp();
         
         // if browserName is passedd from .xml
         if(browserName!=null) {
         	prop.setProperty("browser", browserName);
-        	prop.setProperty("browserversion", browserversion);
+        	prop.setProperty("browserVersion", browserVersion);
+
         }
         
         //ChainTestListener.log("properties used :" + prop);
@@ -77,7 +83,10 @@ public class BaseTest {
     @Description("close the browser")
     @AfterTest
     public void tearDown() {
-        driver.quit();
-        log .info("closing the browser.......");
-}
+        if (driver != null) {
+            driver.quit();
+        }
+        log.info("closing the browser.......");
+    }
+
 }
