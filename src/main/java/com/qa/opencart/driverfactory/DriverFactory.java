@@ -19,10 +19,10 @@ import org.openqa.selenium.edge.EdgeDriver;
 import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.remote.RemoteWebDriver;
 import org.openqa.selenium.safari.SafariDriver;
-
 import com.aventstack.chaintest.plugins.ChainTestListener;
 import com.qa.opencart.exceptions.BrowserException;
 import com.qa.opencart.exceptions.FrameWorkExceptions; 
+
 
 public class DriverFactory {
 	
@@ -226,7 +226,8 @@ public class DriverFactory {
 	 public static String  getScreenshotBASE64() {
 		 return ((TakesScreenshot) getDriver() ).getScreenshotAs(OutputType.BASE64);	 
 	 }
-	 
+}
+
 //	 /**
 //		 * this is used to init the config properties
 //		 * @return
@@ -245,4 +246,4 @@ public class DriverFactory {
 //			return prop;
 //		}
 
-}
+

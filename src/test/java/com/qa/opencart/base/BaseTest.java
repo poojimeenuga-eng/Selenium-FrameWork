@@ -29,64 +29,61 @@ import io.qameta.allure.Description;
 @Listeners(ChainTestListener.class)
 public class BaseTest {
 
-     WebDriver driver;
-     DriverFactory df;
-    protected Properties prop;
-    protected LoginPage loginpage;
-    protected AccountsPage accpage;
-    protected SearchResultPage searchResultsPage;
-    protected ProductInfoPage productInfoPage;
-    protected RegisterPage registerPage;
-    
-	private static final Logger log = LogManager.getLogger(BaseTest.class);
+    WebDriver driver;
+    DriverFactory df;
+   protected Properties prop;
+   protected LoginPage loginpage;
+   protected AccountsPage accpage;
+   protected SearchResultPage searchResultsPage;
+   protected ProductInfoPage productInfoPage;
+   protected RegisterPage registerPage;
+   
+   private static final Logger log = LogManager.getLogger(BaseTest.class);
 	
-    @Description("init the driver and properties")
-    @Parameters({"browser" , "browserVersion"})
-    @BeforeTest
-    public void setup(
-            @Optional("chrome") String browserName,
-            @Optional("latest") String browserVersion) {
-    	
+   @Description("init the driver and properties")
+	@Parameters({"browser", "browserversion", "testname"})
+	@BeforeTest
+	public void setup(String browserName, String browserVersion, String testname) {
+		df = new DriverFactory();
+		prop = df.initProp();
+		
+			//browserName is passed from .xml file
+			if(browserName!=null) {
+				prop.setProperty("browser", browserName);
+				prop.setProperty("browserversion", browserVersion);
+				prop.setProperty("testname", testname);
 
-        df = new DriverFactory();
-        prop = df.initProp();
-        
-        // if browserName is passedd from .xml
-        if(browserName!=null) {
-        	prop.setProperty("browser", browserName);
-        	prop.setProperty("browserVersion", browserVersion);
+			}
+       
+       //ChainTestListener.log("properties used :" + prop);
+       
+      driver = df.initDriver(prop);
+      loginpage = new LoginPage(driver);
+   }
+   
+//   @BeforeMethod
+//   public void beforeMethod(ITestContext result) {
+//   	LogUtils.info("----starting test case----------" + result.getName());
+//   }
+//   
+   @AfterMethod //will be running after @testmethod
+   
+   public void attachScreenshot(ITestResult result) {
+//  	if(!result.isSuccess()) {
+//   		ChainTestListener.embed(DriverFactory.getScreenshotByte(), "image/png");
+//   		  	}
+//   	
+   	ChainTestListener.embed(DriverFactory.getScreenshotByte(), "image/png");
+   	//LogUtils.info("----ending test case----------" + result.getMethod().getMethodName());
+   }
 
-        }
-        
-        //ChainTestListener.log("properties used :" + prop);
-        
-       driver = df.initDriver(prop);
-       loginpage = new LoginPage(driver);
-    }
-    
-//    @BeforeMethod
-//    public void beforeMethod(ITestContext result) {
-//    	LogUtils.info("----starting test case----------" + result.getName());
-//    }
-//    
-    @AfterMethod //will be running after @testmethod
-    
-    public void attachScreenshot(ITestResult result) {
-//   	if(!result.isSuccess()) {
-//    		ChainTestListener.embed(DriverFactory.getScreenshotByte(), "image/png");
-//    		  	}
-//    	
-    	ChainTestListener.embed(DriverFactory.getScreenshotByte(), "image/png");
-    	//LogUtils.info("----ending test case----------" + result.getMethod().getMethodName());
-    }
-
-    @Description("close the browser")
-    @AfterTest
-    public void tearDown() {
-        if (driver != null) {
-            driver.quit();
-        }
-        log.info("closing the browser.......");
-    }
+   @Description("close the browser")
+   @AfterTest
+   public void tearDown() {
+       if (driver != null) {
+           driver.quit();
+       }
+       log.info("closing the browser.......");
+   }
 
 }
